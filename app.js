@@ -1,12 +1,11 @@
 const express = require('express');
+require('dotenv').config(); // Load environment variables from .env file
 const app = express();
-
-// Define your API key
-const apiKey = 'your-api-key';
 
 // Middleware function to validate API key
 const validateApiKey = (req, res, next) => {
   const providedApiKey = req.query.apiKey; // assuming API key is provided as a query parameter
+  const apiKey = process.env.API_KEY; // Retrieve API key from environment variable
   if (!providedApiKey || providedApiKey !== apiKey) {
     return res.status(401).send('Unauthorized. Invalid API key.');
   }
@@ -24,6 +23,7 @@ app.get('/delay/:time', validateApiKey, (req, res) => {
   }, delayTime * 1000);
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+const PORT = process.env.PORT || 3000; // Use port from environment variable or default to 3000
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
